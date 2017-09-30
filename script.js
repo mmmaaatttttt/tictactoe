@@ -12,7 +12,9 @@ document.addEventListener("DOMContentLoaded", function() {
  * Set up the initial game state from a fresh object
  */
 function initializeGame() {
-  var defaultBoard = [[null, null, null], [null, null, null], [null, null, null]];
+  var defaultBoard = [[null, null, null],
+                      [null, null, null],
+                      [null, null, null]];
   var defaultState = {
     currentPlayer: 'X',
     turn: 0,
