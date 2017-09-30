@@ -1,5 +1,16 @@
 
+var state;
 
+document.addEventListener("DOMContentLoaded", function() {
+  state = initializeGame();
+  var container = document.querySelector('.container');
+  convertToBoard(container);
+  container.addEventListener('click', handleClick);
+});
+
+/**
+ * Set up the initial game state from a fresh object
+ */
 function initializeGame() {
   var defaultBoard = [[null, null, null], [null, null, null], [null, null, null]];
   var defaultState = {
@@ -12,11 +23,10 @@ function initializeGame() {
   return defaultState;
 }
 
-var state = initializeGame();
-var container = document.querySelector('.container');
-convertToBoard(container);
-container.addEventListener('click', handleClick);
-
+/**
+ * Determine whose turn it is based on the last turn
+ * @param {String} lastTurn - 'X' or 'O', the last player to take a turn
+ */
 function setTurn(lastTurn) {
   if (lastTurn === 'X') {
     return 'O';
@@ -40,6 +50,10 @@ function playTurn(cell) {
   }
 }
 
+/**
+ * Covert the divs to a 2-dimensional array
+ * @param {Node} container - a dom node container holding the board of divs
+ */
 function convertToBoard(container) {
   var columns = container.children;
   for (let colIdx = 0; colIdx < 3; colIdx++) {
@@ -50,6 +64,13 @@ function convertToBoard(container) {
   }
 }
 
+/**
+ * A function that takes three slots and checks for 
+ *   equality to determine a win or not
+ * @param {Any} slot1
+ * @param {Any} slot2
+ * @param {Any} slot3
+ */
 function hasWinner(slot1, slot2, slot3) {
   if (slot1 === null || slot2 === null || slot3 === null) {
     return false;
@@ -57,6 +78,10 @@ function hasWinner(slot1, slot2, slot3) {
   return slot1 === slot2 && slot2 === slot3;
 }
 
+/**
+ * An algorithm that takes a 2-dimensional array and checks for winning positions
+ * @param {Array} board - a 2-dimensional (3x3) array
+ */
 function didWin(board) {
   /* check rows and colums */
   for (let i = 0; i < board.length; i++) {
@@ -86,6 +111,10 @@ function didWin(board) {
   return false;
 }
 
+/**
+ * Event handler callback for returning the game to a new initial state
+ * @param {Object} event - a DOM event object
+ */
 function resetGame(event) {
   var cells = document.querySelectorAll('.cell');
   cells.forEach(function(cell) {
@@ -98,6 +127,9 @@ function resetGame(event) {
   }, 1);
 }
 
+/**
+ * Create a new button used to start the game over
+ */
 function addStartOverButton() {
   var container = document.querySelector('.container');
   var button = document.createElement('button');
@@ -107,6 +139,11 @@ function addStartOverButton() {
   container.appendChild(button);
 }
 
+/**
+ * A function that checks the board after each turn 
+ *  to see if there are any winners or if it's a draw
+ *  and then call other helper functions to manage the gameOver
+ */
 function processResult() {
   if (didWin(state.board)) {
     alert(`${state.currentPlayer} wins!`);
@@ -120,6 +157,10 @@ function processResult() {
   state.currentPlayer = setTurn(state.currentPlayer);
 }
 
+/**
+ * Click handler for allowing players to take turns
+ * @param {Object} event - a DOM click event
+ */
 function handleClick(event) {
   var node = event.target;
   if (node.parentNode.className === 'column' && !state.over) {
