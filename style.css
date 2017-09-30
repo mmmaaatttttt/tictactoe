@@ -1,15 +1,39 @@
+body {
+  background-color: cadetblue;
+}
+.cell {
+  background-color: ghostwhite;
+}
+
 .container {
   text-align: center;
 }
 
-.row {
+.column {
   display: inline-block;
   vertical-align: top;
 }
 
-.row div {
+.column div {
   width: 200px;
   height: 200px;
   border: 1px solid black;
+  margin: 3px 0px;
   font-size: 176px;
+  border-radius: 4px;
+}
+
+.startOver {
+  display: block;
+  margin: 5% auto;
+  font-size: 1.5rem;
+  background-color: palegoldenrod;
+  border-radius: 5px;
+  border: 2px solid black;
+  padding: 5px;
+}
+
+.startOver:hover {
+  background-color: lightgoldenrodyellow;
+  cursor: pointer;
 }
