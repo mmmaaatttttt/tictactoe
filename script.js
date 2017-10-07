@@ -1,27 +1,28 @@
-
 var state;
 
 document.addEventListener("DOMContentLoaded", function() {
   state = initializeGame();
-  var container = document.querySelector('.container');
+  var container = document.querySelector(".container");
   convertToBoard(container);
-  container.addEventListener('click', handleClick);
+  container.addEventListener("click", handleClick);
 });
 
 /**
  * Set up the initial game state from a fresh object
  */
 function initializeGame() {
-  var defaultBoard = [[null, null, null],
-                      [null, null, null],
-                      [null, null, null]];
+  var defaultBoard = [
+    [null, null, null],
+    [null, null, null],
+    [null, null, null]
+  ];
   var defaultState = {
-    currentPlayer: 'X',
+    currentPlayer: "X",
     turn: 0,
     over: false,
     board: defaultBoard
   };
-  
+
   return defaultState;
 }
 
@@ -30,10 +31,10 @@ function initializeGame() {
  * @param {String} lastTurn - 'X' or 'O', the last player to take a turn
  */
 function setTurn(lastTurn) {
-  if (lastTurn === 'X') {
-    return 'O';
+  if (lastTurn === "X") {
+    return "O";
   }
-  return 'X';
+  return "X";
 }
 
 /**
@@ -42,10 +43,10 @@ function setTurn(lastTurn) {
  * @param {Object} cell - a tic-tac-toe cell (div)
  */
 function playTurn(cell) {
-  if (cell.innerText === '') {
+  if (cell.innerText === "") {
     cell.innerText = state.currentPlayer;
     state.turn++;
-    var coordinates = cell.id.split('|');
+    var coordinates = cell.id.split("|");
     var row = coordinates[0];
     var col = coordinates[1];
     state.board[row][col] = state.currentPlayer;
@@ -61,7 +62,7 @@ function convertToBoard(container) {
   for (let colIdx = 0; colIdx < 3; colIdx++) {
     for (let rowIdx = 0; rowIdx < 3; rowIdx++) {
       container.children[colIdx].children[rowIdx].id = `${rowIdx}|${colIdx}`;
-      container.children[colIdx].children[rowIdx].className = 'cell';
+      container.children[colIdx].children[rowIdx].className = "cell";
     }
   }
 }
@@ -118,13 +119,13 @@ function didWin(board) {
  * @param {Object} event - a DOM event object
  */
 function resetGame(event) {
-  var cells = document.querySelectorAll('.cell');
+  var cells = document.querySelectorAll(".cell");
   cells.forEach(function(cell) {
-    cell.innerText = '';
+    cell.innerText = "";
   });
   state = initializeGame();
   setTimeout(function() {
-    var startOverButton = document.querySelector('.startOver');
+    var startOverButton = document.querySelector(".startOver");
     startOverButton.remove();
   }, 1);
 }
@@ -133,11 +134,11 @@ function resetGame(event) {
  * Create a new button used to start the game over
  */
 function addStartOverButton() {
-  var container = document.querySelector('.container');
-  var button = document.createElement('button');
-  button.innerText = 'Start Over';
-  button.className = 'startOver';
-  button.addEventListener('click', resetGame);
+  var container = document.querySelector(".container");
+  var button = document.createElement("button");
+  button.innerText = "Start Over";
+  button.className = "startOver";
+  button.addEventListener("click", resetGame);
   container.appendChild(button);
 }
 
@@ -165,7 +166,7 @@ function processResult() {
  */
 function handleClick(event) {
   var node = event.target;
-  if (node.parentNode.className === 'column' && !state.over) {
+  if (node.parentNode.className === "column" && !state.over) {
     playTurn(node);
     processResult();
   }
