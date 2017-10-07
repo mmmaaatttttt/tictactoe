@@ -1,10 +1,10 @@
 var state;
 
-document.addEventListener("DOMContentLoaded", function() {
+$(function() {
   state = initializeGame();
-  var container = document.querySelector(".container");
-  convertToBoard(container);
-  container.addEventListener("click", handleClick);
+  var $container = $(".container");
+  convertToBoard($container);
+  $container.on("click", handleClick);
 });
 
 /**
@@ -42,11 +42,11 @@ function setTurn(lastTurn) {
  *   if so, execute a player's turn
  * @param {Object} cell - a tic-tac-toe cell (div)
  */
-function playTurn(cell) {
-  if (cell.innerText === "") {
-    cell.innerText = state.currentPlayer;
+function playTurn($cell) {
+  if ($cell.text() === "") {
+    $cell.text(state.currentPlayer);
     state.turn++;
-    var coordinates = cell.id.split("|");
+    var coordinates = $cell.attr("id").split("|");
     var row = coordinates[0];
     var col = coordinates[1];
     state.board[row][col] = state.currentPlayer;
@@ -57,14 +57,16 @@ function playTurn(cell) {
  * Covert the divs to a 2-dimensional array
  * @param {Node} container - a dom node container holding the board of divs
  */
-function convertToBoard(container) {
-  var columns = container.children;
-  for (let colIdx = 0; colIdx < 3; colIdx++) {
-    for (let rowIdx = 0; rowIdx < 3; rowIdx++) {
-      container.children[colIdx].children[rowIdx].id = `${rowIdx}|${colIdx}`;
-      container.children[colIdx].children[rowIdx].className = "cell";
-    }
-  }
+function convertToBoard($container) {
+  var $columns = $container.children();
+  $columns.each(function(i, col) {
+    $(col)
+      .children()
+      .attr("id", function(j) {
+        return j + "|" + i;
+      })
+      .addClass("cell");
+  });
 }
 
 /**
@@ -119,14 +121,12 @@ function didWin(board) {
  * @param {Object} event - a DOM event object
  */
 function resetGame(event) {
-  var cells = document.querySelectorAll(".cell");
-  cells.forEach(function(cell) {
-    cell.innerText = "";
-  });
+  var $cells = $(".cell");
+  $cells.text("");
   state = initializeGame();
   setTimeout(function() {
-    var startOverButton = document.querySelector(".startOver");
-    startOverButton.remove();
+    var $startOverButton = $(".startOver");
+    $startOverButton.remove();
   }, 1);
 }
 
@@ -134,12 +134,12 @@ function resetGame(event) {
  * Create a new button used to start the game over
  */
 function addStartOverButton() {
-  var container = document.querySelector(".container");
-  var button = document.createElement("button");
-  button.innerText = "Start Over";
-  button.className = "startOver";
-  button.addEventListener("click", resetGame);
-  container.appendChild(button);
+  var $container = $(".container");
+  var $button = $("<button>")
+    .text("Start Over")
+    .addClass("startOver")
+    .on("click", resetGame);
+  $container.append($button);
 }
 
 /**
@@ -149,7 +149,7 @@ function addStartOverButton() {
  */
 function processResult() {
   if (didWin(state.board)) {
-    alert(`${state.currentPlayer} wins!`);
+    alert(state.currentPlayer + " wins!");
     state.over = true;
     addStartOverButton();
   } else if (state.turn === 9) {
@@ -165,9 +165,9 @@ function processResult() {
  * @param {Object} event - a DOM click event
  */
 function handleClick(event) {
-  var node = event.target;
-  if (node.parentNode.className === "column" && !state.over) {
-    playTurn(node);
+  var $node = $(event.target);
+  if ($node.parent().hasClass("column") && !state.over) {
+    playTurn($node);
     processResult();
   }
 }
